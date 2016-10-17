@@ -1,0 +1,47 @@
+
+
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+
+public class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> { 
+    private final IntWritable one = new IntWritable(1);
+    private Text data = new Text();
+    String range;
+    int length, startRange;
+    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+    	 String dump = value.toString();
+    	 if(StringUtils.ordinalIndexOf(dump,";",4)>-1){
+    	        int startIndex = StringUtils.ordinalIndexOf(dump,";",3) + 1;
+    	        String tweet = dump.substring(startIndex,dump.lastIndexOf(';'));    	      
+    	      
+    	 length = tweet.length();
+    	 }
+
+    	 if (length =< 140){
+         int category = length/5;
+
+         if(length%5==0){                       
+                 startRange = ((category -1 ) * 5) + 1;
+         }
+
+         else{    
+                 startRange = (category * 5) + 1;
+         }
+
+         int endRange = startRange + 4;
+
+         range = startRange + "-" + endRange;
+    	 //StringTokenizer itr = new StringTokenizer(value.toString(), "-- \t\n\r\f,.:;?![]'\"");
+        //while (itr.hasMoreTokens()) {
+          data.set(range);
+          context.write(data, one);
+        }
+    }
+}
