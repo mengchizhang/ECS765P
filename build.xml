@@ -1,4 +1,4 @@
-<project name="CompanyCount" default="dist" basedir=".">
+<project name="TwitterAnalysis" default="dist" basedir=".">
 	<description>
         Sample MapReduce project build file
     </description>
